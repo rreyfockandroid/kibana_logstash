@@ -1,0 +1,7 @@
+docker exec --workdir /bin -it kafka /bin/bash
+
+./kafka-topics --bootstrap-server localhost:9092 --create --topic test-topic
+./kafka-topics --bootstrap-server localhost:9092 --list
+
+docker exec --workdir /bin -it kafka kafka-topics --bootstrap-server localhost:9092 --list
+docker exec --workdir /bin -it kafka /bin/bash kafka-console-consumer --bootstrap-server localhost:9092 --topic test-topic
