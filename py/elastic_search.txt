@@ -1,0 +1,58 @@
+# lista indeksow
+curl -X GET "http://localhost:9200/_cat/indices?v"
+
+curl -X GET "http://localhost:9200/kafka-test-2025.04.23/"
+curl -X GET "http://localhost:9200/kafka-test-2025.04.23/_settings"
+curl -X GET "http://localhost:9200/kafka-test-2025.04.23/_mapping"
+
+# delete index
+curl -X DELETE "http://localhost:9200/books-google-2025.04.23"
+# search
+curl -X POST "http://localhost:9200/kafka-test-2025.04.23/_search" -H 'content-type: application/json' -d \
+'{"size": 0,  "aggs": { "top_tags": {"terms": {"field": "language.keyword","size": 5}}}}' | jq .
+{
+  "took": 1,
+  "timed_out": false,
+  "_shards": {
+    "total": 1,
+    "successful": 1,
+    "skipped": 0,
+    "failed": 0
+  },
+  "hits": {
+    "total": {
+      "value": 1604,
+      "relation": "eq"
+    },
+    "max_score": null,
+    "hits": []
+  },
+  "aggregations": {
+    "top_tags": {
+      "doc_count_error_upper_bound": 0,
+      "sum_other_doc_count": 48,
+      "buckets": [
+        {
+          "key": "eng",
+          "doc_count": 1104
+        },
+        {
+          "key": "fre",
+          "doc_count": 108
+        },
+        {
+          "key": "ger",
+          "doc_count": 28
+        },
+        {
+          "key": "ita",
+          "doc_count": 20
+        },
+        {
+          "key": "chi",
+          "doc_count": 12
+        }
+      ]
+    }
+  }
+}

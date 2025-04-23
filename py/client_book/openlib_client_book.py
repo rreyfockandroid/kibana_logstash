@@ -5,11 +5,13 @@ import math
 
 logger = logging.getLogger('client_book')
 
+URL = "https://openlibrary.org/search.json"
+
 def __get(url: str, params: dict=None):
     return requests.get(url, params=params)
 
 
-def read_books(url: str, params: dict=None, filter_fn: Callable[[Any], Any]=None) -> list:
+def __read_books(url: str, params: dict=None, filter_fn: Callable[[Any], Any]=None) -> list:
     response = __get(url, params=params)
     if response.status_code != 200:
         logger.error('request error ', response.status_code)
@@ -22,7 +24,10 @@ def read_books(url: str, params: dict=None, filter_fn: Callable[[Any], Any]=None
         filter_fn(book) for book in data['docs']           
     ]
 
-def read_all_books(url, params) -> list:
+def read_books(params: dict=None, filter_fn: Callable[[Any], Any]=None) -> list:
+    return __read_books(URL, params, filter_fn)
+
+def __read_all_books(url, params) -> list:
     all_books = []
     limit = 100
     logger.info('start reading...')
@@ -31,6 +36,7 @@ def read_all_books(url, params) -> list:
         params['limit'] = limit
         resp = __get(url, params)
         if resp.status_code != 200:
+            logger.error('request error ', resp.status_code)
             break
         data = resp.json()
         if 'docs' in data and data['docs']:
@@ -41,6 +47,8 @@ def read_all_books(url, params) -> list:
     logger.info(f'readed {len(all_books)}')
     return all_books
 
+def read_all_books(params: dict=None) -> list:
+    return __read_all_books(URL, params)
 
 
 def print_books(books: list):

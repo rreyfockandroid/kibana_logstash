@@ -1,7 +1,7 @@
-import client_book as c
+import client_book.openlib_client_book as c
 import writer as w
 import logging
-import config as conf
+import conf.config as conf
 
 # pobiera tylko czesc - domyslny limit
 def get_filtered_books() -> list:
@@ -12,21 +12,21 @@ def get_filtered_books() -> list:
     params = {
         'q': 'django'
     }
-    return c.request("https://openlibrary.org/search.json", params, filter)
+    return c.read_books(params, filter)
 
 # pobiera tylko czesc - domyslny limit
 def get_books():
     params = {
         'q': 'django'
     }
-    return c.read_books("https://openlibrary.org/search.json", params)    
+    return c.read_books(params)    
 
 # pobiera wszystkie
 def get_all_books():
     params = {
         'q': 'django'
     }
-    return c.read_all_books("https://openlibrary.org/search.json", params)    
+    return c.read_all_books(params)    
 
 def print_boks(books: list[dict]):
     for book in books:
@@ -37,4 +37,4 @@ def print_boks(books: list[dict]):
 if __name__ == '__main__': 
     conf.config()  
     books = get_all_books()
-    w.write_to_file_as_jsons('books_openlib.json', books)
+    w.write_to_file_as_jsons('books_openlib_django.json', books)

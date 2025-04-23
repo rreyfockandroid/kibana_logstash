@@ -29,3 +29,8 @@ create table books as select * from read_json_auto('books_openlib.json');
 select author_name from books where array_contains(author_name, 'Django Wexler');
 
 select unnest(author_name) as name, list_aggregate(author_name, 'count') as count from books order by count;
+
+# FAIL ducplicates
+select count(*),  unnest(language) from books group by language;
+# OK list of languages used in the books
+select count(*) as c, lang from (select unnest(language) as lang from books) group by lang order by c;
